@@ -16,12 +16,13 @@ export default class extends Controller {
     const current = this.#textareaValue()
 
     if (on) {
+      let next = current
+      // If legacy or old-version marked snippet exists, replace with latest
+      if (this.#currentValueIncludesLegacy() || (this.#currentValueIncludesSnippet() && !this.#currentValueIsLatest())) {
+        next = this.#removeLegacy(next)
+        next = this.#removeMarked(next)
+      }
       if (!this.#currentValueIncludesSnippet()) {
-        // If legacy snippet exists, replace it with the marked snippet
-        let next = current
-        if (this.#currentValueIncludesLegacy()) {
-          next = this.#removeLegacy(next)
-        }
         const prefix = next.trim().length > 0 ? "\n\n" : ""
         this.#setTextareaValue(next + prefix + this.#snippet())
       }
@@ -53,6 +54,11 @@ export default class extends Controller {
     return v.includes("/* Slack-style left sidebar (desktop only) */")
   }
 
+  #currentValueIsLatest() {
+    const v = this.#textareaValue()
+    return v.includes(this.#versionMarker())
+  }
+
   #startMarker() {
     return "/* CAMPFIRE_LEFT_SIDEBAR_TOGGLE_START */"
   }
@@ -80,13 +86,18 @@ export default class extends Controller {
     return "/* CAMPFIRE_LEFT_SIDEBAR_TOGGLE_END */"
   }
 
+  #versionMarker() {
+    return "/* CAMPFIRE_LEFT_SIDEBAR_TOGGLE_V2 */"
+  }
+
   #snippet() {
     return `
 ${this.#startMarker()}
+${this.#versionMarker()}
 /* Slack-style left sidebar (desktop only) */
 @media (min-width: 100ch) {
-  /* Put the sidebar on the left; keep nav on top */
-  body {
+  /* Put the sidebar on the left when sidebar is active */
+  body.sidebar {
     grid-template-areas:
       "sidebar nav"
       "sidebar main";
@@ -94,25 +105,43 @@ ${this.#startMarker()}
   }
 
   /* Offset the top nav from the left sidebar instead of the right */
-  #nav {
+  body.sidebar #nav {
     inset-inline-end: auto !important;
     inset-inline-start: var(--sidebar-width) !important;
   }
 
   /* Keep a gutter on the right of the main content (mirrors original) */
-  .sidebar #main-content {
+  body.sidebar #main-content {
     margin-inline: 0 5vw !important;
   }
 
   /* Dock the sidebar tools to the left edge on desktop */
-  .sidebar .sidebar__tools {
+  body.sidebar .sidebar__tools {
     inset-inline-start: 0 !important;
     inset-inline-end: auto !important;
   }
 
   /* Move the Once logo to the lower-right when sidebar is on the left */
-  #app-logo {
+  body.sidebar #app-logo {
     inset: auto 0 0 auto !important;
+  }
+
+  /* When a center panel is present, hide sidebar and center content */
+  body.sidebar:has(.panel) {
+    grid-template-columns: 0 1fr !important;
+  }
+  body.sidebar:has(.panel) #nav {
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+  }
+  body.sidebar:has(.panel) #main-content {
+    margin-inline: 0 !important;
+  }
+  body.sidebar:has(.panel) #sidebar {
+    display: none !important;
+  }
+  body.sidebar:has(.panel) [data-sidebar-resize-target="handle"] {
+    display: none !important;
   }
 }
 /* Mobile is unchanged; the sidebar still slides in from the right */
