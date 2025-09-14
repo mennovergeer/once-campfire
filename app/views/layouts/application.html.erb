@@ -56,7 +56,11 @@
       </footer>
     </main>
 
-    <aside id="sidebar" data-controller="toggle-class" data-toggle-class-toggle-class="open">
+    <aside id="sidebar" data-controller="toggle-class sidebar-resize" data-toggle-class-toggle-class="open">
+      <div data-sidebar-resize-target="handle"
+           style="position: absolute; inset-block: 0; inline-size: 10px; cursor: col-resize; z-index: 5; touch-action: none;"
+           role="separator" aria-orientation="vertical" aria-label="Resize sidebar"
+           data-action="pointerdown->sidebar-resize#startResize"></div>
       <%= yield :sidebar %>
     </aside>
 
