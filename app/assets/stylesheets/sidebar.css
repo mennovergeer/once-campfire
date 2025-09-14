@@ -75,6 +75,27 @@
   }
 }
 
+/* Resizer handle: visible on desktop/tablet when sidebar is present */
+@media (min-width: 100ch) {
+  #sidebar [data-sidebar-resize-target="handle"] {
+    display: block;
+    /* Position set via controller to correct edge (left/right) */
+    background: transparent; /* hit area only; keep visual subtle */
+  }
+}
+
+@media (max-width: 100ch) {
+  #sidebar [data-sidebar-resize-target="handle"] {
+    display: none;
+  }
+}
+
+/* While resizing, show resize cursor and prevent accidental selection */
+body.is-resizing-sidebar {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
 /* Direct messsages */
 .directs {
   --btn-border-color: var(--color-border-darker);
