@@ -22,11 +22,30 @@
       </p>
     </div>
 
+    <!-- Slack-style left sidebar toggle -->
+    <% has_left_sidebar = @account.custom_styles.to_s.include?("CAMPFIRE_LEFT_SIDEBAR_TOGGLE_START") ||
+                         @account.custom_styles.to_s.include?("Slack-style left sidebar (desktop only)") %>
+    <div data-controller="custom-styles-toggle">
+      <div class="flex align-center justify-center gap margin-block-end">
+        <span class="txt-small">Left sidebar layout (desktop)</span>
+        <label class="switch">
+        <input type="checkbox"
+               class="switch__input"
+               aria-label="Toggle left sidebar layout"
+               data-custom-styles-toggle-target="checkbox"
+               data-action="custom-styles-toggle#toggle"
+               <%= "checked=\"checked\"" if has_left_sidebar %>>
+          <span class="switch__btn round" aria-hidden="true"></span>
+        </label>
+      </div>
+
     <label class="flex align-start gap flex-item-grow">
       <%= form.text_area :custom_styles, class: "input input--code txt--small", placeholder: "Add CSS styles…",
-            autocomplete: "off", spellcheck: "false", autocorrect: "off", autocapitalize: "off",
-            rows: 16, required: false %>
+             autocomplete: "off", spellcheck: "false", autocorrect: "off", autocapitalize: "off",
+            rows: 16, required: false,
+            data: { custom_styles_toggle_target: "textarea" } %>
     </label>
+    </div>
 
     <%= form.button class: "btn btn--reversed center txt-large", type: "submit" do %>
       <%= image_tag "check.svg", aria: { hidden: "true" }, size: 20 %>
