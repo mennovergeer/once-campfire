@@ -34,8 +34,12 @@ export default class extends Controller {
 
   applyPersistedWidth() {
     const px = Number(window.localStorage.getItem(this.#storageKey()))
-    if (px && Number.isFinite(px)) {
+    const isActive = document.body.classList.contains("sidebar")
+    if (isActive && px && Number.isFinite(px)) {
       document.body.style.setProperty("--sidebar-width", `${px}px`)
+    } else {
+      // Ensure we don't offset layouts that shouldn't have a sidebar
+      document.body.style.removeProperty("--sidebar-width")
     }
   }
 
@@ -43,6 +47,8 @@ export default class extends Controller {
   startResize(event) {
     // Desktop/tablet only: ignore on small viewports
     if (window.matchMedia("(max-width: 100ch)").matches) return
+    // Only when sidebar is active in layout
+    if (!document.body.classList.contains("sidebar")) return
 
     this.updateSide()
     this.startX = event.clientX
@@ -83,4 +89,3 @@ export default class extends Controller {
     return "campfire.sidebar.width"
   }
 }
-
