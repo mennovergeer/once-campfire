@@ -109,6 +109,11 @@ ${this.#startMarker()}
     inset-inline-start: 0 !important;
     inset-inline-end: auto !important;
   }
+
+  /* Move the Once logo to the lower-right when sidebar is on the left */
+  #app-logo {
+    inset: auto 0 0 auto !important;
+  }
 }
 /* Mobile is unchanged; the sidebar still slides in from the right */
 ${this.#endMarker()}`.trim()
