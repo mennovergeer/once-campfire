@@ -52,6 +52,7 @@ group :development, :test do
 end
 
 group :test do
+  gem "minitest", "~> 5.27"
   gem "capybara"
   gem "mocha"
   gem "selenium-webdriver"
