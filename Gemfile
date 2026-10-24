@@ -4,25 +4,25 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 git_source(:bc)     { |repo| "https://github.com/basecamp/#{repo}" }
 
 # Rails
-gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 8.1.0", ">= 8.1.3.1"
 
 # Drivers
 gem "sqlite3", "~> 2.7"
 gem "redis", "~> 5.4"
 
 # Deployment
-gem "puma", "~> 6.6"
+gem "puma", "~> 7.1"
 
 # Jobs
 gem "resque", "~> 2.7.0"
 gem "resque-pool", "~> 0.7.1"
 
 # Assets
-gem "propshaft", github: "rails/propshaft"
-gem "importmap-rails", github: "rails/importmap-rails"
+gem "propshaft", "~> 1.2"
+gem "importmap-rails", "~> 2.2"
 
 # Hotwire
-gem "turbo-rails", github: "hotwired/turbo-rails"
+gem "turbo-rails", "~> 2.0"
 gem "stimulus-rails"
 
 # Media handling
