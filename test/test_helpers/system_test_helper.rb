@@ -14,7 +14,17 @@ module SystemTestHelper
   end
 
   def join_room(room)
-    visit room_url(room)
+    # A Turbo redirect can replace the document while Selenium starts a visit.
+    # Retry only that transient navigation error, at most twice.
+    attempts = 0
+    begin
+      visit room_url(room)
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      attempts += 1
+      raise if attempts > 2
+      retry
+    end
+    assert_current_path room_path(room)
     wait_for_cable_connection
     dismiss_pwa_install_prompt
   end
