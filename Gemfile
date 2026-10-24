@@ -26,7 +26,8 @@ gem "turbo-rails", "~> 2.0"
 gem "stimulus-rails"
 
 # Media handling
-gem "image_processing", ">= 1.2"
+gem "image_processing", "~> 2.2"
+gem "ruby-vips", "~> 2.2"
 
 # Telemetry
 gem "sentry-ruby"
