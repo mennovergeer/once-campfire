@@ -14,7 +14,12 @@ module SystemTestHelper
   end
 
   def join_room(room)
-    visit room_url(room)
+    # Turbo may replace the current document just as a new visit begins.
+    # Retry that transient Selenium error using Capybara's bounded wait.
+    page.document.synchronize(errors: [ Selenium::WebDriver::Error::StaleElementReferenceError ]) do
+      visit room_url(room)
+    end
+    assert_current_path room_path(room)
     wait_for_cable_connection
     dismiss_pwa_install_prompt
   end
